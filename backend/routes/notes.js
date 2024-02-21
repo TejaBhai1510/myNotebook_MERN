@@ -38,25 +38,37 @@ router.post('/addnote', fetchuser, [
 
 // ROUTE 3: Updating an existing Note using: PUT "/api/notes/updatenote", Login Required
 router.put('/updatenote/:id', fetchuser, async (req, res) => {
+    const { title, description, tag } = req.body;
     try {
-        const {title, description, tag} = req.body;
         // Create a new note Object
         const newNote = {};
-        if(title){newNote.title = title};
-        if(description){newNote.description = description};
-        if(tag){newNote.tag = tag};
+        if (title) { newNote.title = title };
+        if (description) { newNote.description = description };
+        if (tag) { newNote.tag = tag };
 
         // Find the note to be Updated & Update it
         let note = await Note.findById(req.params.id);
-        if(!note){
-            return res.status(404).send("Not Found");
-        }
-        if(note.user.toString() !== req.user.id){
-            return res.status(401).send("Not Authorized");
-        }
+        if (!note) { return res.status(404).send("Not Found"); }
+        if (note.user.toString() !== req.user.id) { return res.status(401).send("Not Authorized"); }
 
-        note = await Note.findOneAndUpdate(req.params.id, {$set: newNote}, {new: true});
-        res.json({note});
+        note = await Note.findOneAndUpdate(req.params.id, { $set: newNote }, { new: true });
+        res.json({ note });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send("Some Error occured")
+    }
+})
+
+// ROUTE 4: Deleting an existing Note using: DELETE "/api/notes/deletenote", Login Required
+router.delete('/deletenote/:id', fetchuser, async (req, res) => {
+    try {
+        // Find the note to be Updated & Update it
+        let note = await Note.findById(req.params.id);
+        if (!note) { return res.status(404).send("Not Found"); }
+        if (note.user.toString() !== req.user.id) { return res.status(401).send("Not Authorized"); }
+
+        note = await Note.findOneAndDelete(req.params.id);
+        res.send({"Success": "Note has been deleted"});
     } catch (error) {
         console.error(error.message);
         res.status(500).send("Some Error occured")
