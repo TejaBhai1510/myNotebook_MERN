@@ -32,6 +32,8 @@ const NoteState = (props) => {
       },
       body: JSON.stringify({ title, description, tag }),
     })
+    const json = await response.json();
+    console.log(json);
     // Client side logic
     const note = {
       "_id": "61322f19553781a8ca8d0e8",
@@ -66,23 +68,27 @@ const NoteState = (props) => {
   const editNote = async (id, title, description, tag) => {
     // API Call
     const response = await fetch(`${host}/api/host/updatenote/${id}`, {
-      method: 'POST',
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjEzMWRjNWUzZTQwMzdjZDQ3MzRhMDY2In0sImlhdCI6MTYzMDY2OTU5Nn0.hJS0hx6I7ROugkqjL2CjrJuefA3pJi-IU5yGUbRHI4Q',
       },
       body: JSON.stringify({ title, description, tag }),
     })
-    const json = response.json;
+    const json = await response.json;
+    console.log(json);
     // Client side Logic
-    for (let i = 0; i < notes.length; i++) {
-      const element = notes[i];
+    let newNotes = JSON.parse(JSON.stringify(notes));
+    for (let i = 0; i < newNotes.length; i++) {
+      const element = newNotes[i];
       if (element._id === id) {
-        element.title = title;
-        element.description = description;
-        element.tag = tag;
+        newNotes[i].title = title;
+        newNotes[i].description = description;
+        newNotes[i].tag = tag;
+        break;
       }
     }
+    setNotes(newNotes);
   }
 
   return (
