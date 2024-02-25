@@ -12,18 +12,18 @@ const Notes = () => {
     }, [])
     const updateNote = (currentNote) => {
         ref.current.click();
-        setNote({id: currentNote._id, etitle: currentNote.title, edescription: currentNote.description, etag: currentNote.tag});
+        setNote({ id: currentNote._id, etitle: currentNote.title, edescription: currentNote.description, etag: currentNote.tag });
     }
     const ref = useRef(null);
     const refClose = useRef(null);
-    const [note, setNote] = useState({id:"", etitle:"", edescription: "", etag: "default"})
+    const [note, setNote] = useState({ id: "", etitle: "", edescription: "", etag: "default" })
 
     const handleClick = (e) => {
         editNote(note.id, note.etitle, note.edescription, note.etag);
         refClose.current.click();
     };
     const onChange = (e) => {
-        setNote({...note, [e.target.name]: e.target.value})
+        setNote({ ...note, [e.target.name]: e.target.value })
     };
 
     return (
@@ -45,21 +45,21 @@ const Notes = () => {
                             <form className='my-3'>
                                 <div className="mb-3">
                                     <label for="title" className="form-label">Title</label>
-                                    <input type="text" className="form-control" id="etitle" name='etitle' aria-describedby="emailHelp" onChange={onChange} value={note.title}/>
+                                    <input type="text" className="form-control" id="etitle" name='etitle' aria-describedby="emailHelp" onChange={onChange} value={note.title} minLength={5} required/>
                                 </div>
                                 <div className="mb-3">
                                     <label for="description" className="form-label">Description</label>
-                                    <input type="text" className="form-control" id="edescription" name='edescription' onChange={onChange} value={note.description}/>
+                                    <input type="text" className="form-control" id="edescription" name='edescription' onChange={onChange} value={note.description} minLength={5} required/>
                                 </div>
                                 <div className="mb-3">
                                     <label for="tag" className="form-label">Tag</label>
-                                    <input type="text" className="form-control" id="etag" name='etag' onChange={onChange} value={note.tag}/>
+                                    <input type="text" className="form-control" id="etag" name='etag' onChange={onChange} value={note.tag} />
                                 </div>
                             </form>
                         </div>
                         <div className="modal-footer">
                             <button ref={refClose} type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" className="btn btn-primary" onClick={handleClick}>Update Note</button>
+                            <button disabled={note.etitle.length<5 || note.edescription.length<5} type="button" className="btn btn-primary" onClick={handleClick}>Update Note</button>
                         </div>
                     </div>
                 </div>
@@ -67,6 +67,9 @@ const Notes = () => {
 
             <div className="row my-3">
                 <h2>Your Notes</h2>
+                <div className='container'>
+                    {notes.length === 0 && `No Notes to display`};
+                </div>
                 {notes.map((note) => {
                     return <NoteItem key={note._id} updateNote={updateNote} note={note} />;
                 })}
