@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
 const SignUp = () => {
-    const [credentials, setCredentials] = useState({name:"", email:"", password:"", cpassword:""})
+    const [credentials] = useState({name:"", email:"", password:"", cpassword:""})
     let history = useHistory();
 
     const handleSubmit = async (e) => {
