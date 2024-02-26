@@ -28,7 +28,8 @@ const SignUp = (props) => {
     }
 
     return (
-        <div className='container'>
+        <div className='container mt-4'>
+            <h2>Sign Up to continue to myNotebook</h2>
             <form>
                 <div className="mb-3">
                     <label for="name" className="form-label">Name</label>
